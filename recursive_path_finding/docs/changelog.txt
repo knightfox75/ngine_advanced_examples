@@ -1,0 +1,18 @@
+--------------------------------------------------------------------------------
+
+	Ejemplo de pathfinding recursivo
+
+    Proyecto iniciado el 23 de Noviembre del 2020
+    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    https://nightfoxandco.com
+    contact@nightfoxandco.com
+
+    Requiere N'gine 1.2.0-beta o superior
+	
+--------------------------------------------------------------------------------
+
+
+
+2021-01-11 Version 1.0.0-r
+--------------------------------------------------------------------------------
+Versión inicial.
