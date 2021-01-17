@@ -1,6 +1,7 @@
 /******************************************************************************
 
-    Ejemplo de pathfinding recursivo: Archivo principal
+    N'gine Lib for C++
+    Ejemplo de pathfinding recursivo (Declaraciones)
     Version 1.1.0-r
 
     Proyecto iniciado el 23 de Noviembre del 2020
@@ -60,55 +61,68 @@
 
 
 
+#ifndef PROGRAM_H_INCLUDED
+#define PROGRAM_H_INCLUDED
+
+
+
 /*** Includes ***/
-// C++
-#include <cstdio>
-#include <iostream>
 // Includes de la libreria
 #include <ngn.h>
 // Includes del programa
-#include "program.h"
+#include "settings.h"
+#include "maze.h"
+#include "recursive_pathfinding.h"
+#include "robot.h"
+#include "gui.h"
 
 
 
-/*** Main ***/
-int main(int argc, char* args[]) {
+/*** Declaracion de la clase ***/
+class Program {
 
-    // Resultado
-    int r = 0x00;
+    public:
 
-    // Crea el objeto de la libreria
-    ngn = NULL;
-    ngn = new NGN();
+        // Constructor
+        Program();
 
-    // Crea el objecto del programa
-    Program* program = NULL;
-    program = new Program();
+        // Destructor
+        ~Program();
 
-    // Intenta iniciar N'gine para ejecutar el programa
-    if (program->Awake()) {
-        // Intenta inicializar el programa
-        if (program->Start()) {
-            // Si se ha iniciado correctamente, ejecutalo.
-            program->Run();
-        } else {
-            // Error al inicializar el juego
-            std::cout << "Game Start-up failed!" << std::endl;
-            r = 0x02;
-        }
-    } else {
-        // Error al inicializar la libreria
-        std::cout << "N'GINE boot-up failed!" << std::endl;
-        r = 0x01;
-    }
+        // Procesos iniciales
+        bool Awake();
 
-    // Elimina el objecto program
-    delete program; program = NULL;
+        // Al iniciar el programa
+        bool Start();
 
-    // Elimina el objeto de la libreria
-    delete ngn; ngn = NULL;
+        // Nucleo de ejecucion
+        int8_t Run();
 
-    // Devuelve el resultado de la ejecucion
-    return r;
 
-}
+    private:
+
+        // Carga de archivos necesarios
+        bool Load();
+
+        // Crea los elementos
+        void Create();
+
+        // Logica del programa
+        void Logic();
+
+        // Render de los elementos graficos
+        void Render();
+
+        // Objetos de codigo
+        Maze* maze;                             // Singleton del laberinto
+        RecursivePathfinding* pathfinding;      // Pathfinding recursivo
+        Robot* robot;                           // Robot
+        Gui* gui;                               // Graphic User Interface (Interfaz grafica de usuario)
+
+        // Seleccion con el cursor
+        Vector2I32 MouseOver();                         // Metodo para calcular el tile donde esta el cursor
+
+};
+
+
+#endif // PROGRAM_H_INCLUDED

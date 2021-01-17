@@ -122,9 +122,18 @@
 			<Option target="WIN - Debug" />
 			<Option target="WIN - Release" />
 		</Unit>
-		<Unit filename="source/demo/demo.cpp" />
-		<Unit filename="source/demo/demo.h" />
+		<Unit filename="source/gui.cpp" />
+		<Unit filename="source/gui.h" />
 		<Unit filename="source/main.cpp" />
+		<Unit filename="source/maze.cpp" />
+		<Unit filename="source/maze.h" />
+		<Unit filename="source/program.cpp" />
+		<Unit filename="source/program.h" />
+		<Unit filename="source/recursive_pathfinding.cpp" />
+		<Unit filename="source/recursive_pathfinding.h" />
+		<Unit filename="source/robot.cpp" />
+		<Unit filename="source/robot.h" />
+		<Unit filename="source/settings.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

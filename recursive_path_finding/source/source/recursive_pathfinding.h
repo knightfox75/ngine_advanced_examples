@@ -1,6 +1,7 @@
 /******************************************************************************
 
-    Ejemplo de pathfinding recursivo: Archivo principal
+    N'gine Lib for C++
+    Recursive Path finding (Declaraciones)
     Version 1.1.0-r
 
     Proyecto iniciado el 23 de Noviembre del 2020
@@ -60,55 +61,50 @@
 
 
 
+#ifndef RECURSIVE_PATHFINDING_H_INCLUDED
+#define RECURSIVE_PATHFINDING_H_INCLUDED
+
+
+
 /*** Includes ***/
-// C++
-#include <cstdio>
-#include <iostream>
 // Includes de la libreria
 #include <ngn.h>
 // Includes del programa
-#include "program.h"
+#include "maze.h"
+#include "robot.h"
 
 
 
-/*** Main ***/
-int main(int argc, char* args[]) {
 
-    // Resultado
-    int r = 0x00;
+/*** Declaracion de la clase ***/
+class RecursivePathfinding {
 
-    // Crea el objeto de la libreria
-    ngn = NULL;
-    ngn = new NGN();
+    public:
 
-    // Crea el objecto del programa
-    Program* program = NULL;
-    program = new Program();
+        // Constructor
+        RecursivePathfinding();
 
-    // Intenta iniciar N'gine para ejecutar el programa
-    if (program->Awake()) {
-        // Intenta inicializar el programa
-        if (program->Start()) {
-            // Si se ha iniciado correctamente, ejecutalo.
-            program->Run();
-        } else {
-            // Error al inicializar el juego
-            std::cout << "Game Start-up failed!" << std::endl;
-            r = 0x02;
-        }
-    } else {
-        // Error al inicializar la libreria
-        std::cout << "N'GINE boot-up failed!" << std::endl;
-        r = 0x01;
-    }
+        // Destructor
+        ~RecursivePathfinding();
 
-    // Elimina el objecto program
-    delete program; program = NULL;
+        // Ejecuta una busqueda de ruta
+        int32_t GetPath(Robot* _robot, Vector2I32 destination);
 
-    // Elimina el objeto de la libreria
-    delete ngn; ngn = NULL;
 
-    // Devuelve el resultado de la ejecucion
-    return r;
+    private:
 
-}
+        int32_t Find(int8_t sx, int8_t sy, int8_t ex, int8_t ey);  			// Metodo para ejecutar el pathfinding
+        void Dumbbells(int8_t py, int8_t px, int32_t cnt);              	// Metodo para el calculo de los pesos
+        int32_t ShortestPath(int8_t py, int8_t px, int32_t cnt);            // Metodo para la resolucion de caminos validos
+        void Clear();                                               		// Metodo para resetear el contenidos de TODOS los arrays
+        int32_t path_min_length;                                            // Guarda el peso maximo del camino mas corto
+
+        // // Objetos vinculados
+        Maze* maze;
+        Robot* robot;
+
+};
+
+
+
+#endif // RECURSIVE_PATHFINDING_H_INCLUDED

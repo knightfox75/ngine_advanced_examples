@@ -1,6 +1,7 @@
 /******************************************************************************
 
-    Ejemplo de pathfinding recursivo: Archivo principal
+    N'gine Lib for C++
+    Gui (Declaraciones)
     Version 1.1.0-r
 
     Proyecto iniciado el 23 de Noviembre del 2020
@@ -60,55 +61,69 @@
 
 
 
+#ifndef GUI_H_INCLUDED
+#define GUI_H_INCLUDED
+
+
+
 /*** Includes ***/
-// C++
-#include <cstdio>
-#include <iostream>
 // Includes de la libreria
 #include <ngn.h>
 // Includes del programa
-#include "program.h"
+#include "maze.h"
+#include "robot.h"
 
 
 
-/*** Main ***/
-int main(int argc, char* args[]) {
+/*** Declaracion de la clase ***/
+class Gui {
 
-    // Resultado
-    int r = 0x00;
+    public:
 
-    // Crea el objeto de la libreria
-    ngn = NULL;
-    ngn = new NGN();
+        // Constructor
+        Gui();
 
-    // Crea el objecto del programa
-    Program* program = NULL;
-    program = new Program();
+        // Destructor
+        ~Gui();
 
-    // Intenta iniciar N'gine para ejecutar el programa
-    if (program->Awake()) {
-        // Intenta inicializar el programa
-        if (program->Start()) {
-            // Si se ha iniciado correctamente, ejecutalo.
-            program->Run();
-        } else {
-            // Error al inicializar el juego
-            std::cout << "Game Start-up failed!" << std::endl;
-            r = 0x02;
-        }
-    } else {
-        // Error al inicializar la libreria
-        std::cout << "N'GINE boot-up failed!" << std::endl;
-        r = 0x01;
-    }
+        // Carga los recursos
+        bool Load();
 
-    // Elimina el objecto program
-    delete program; program = NULL;
+        // Crea la interficie
+        void Create();
 
-    // Elimina el objeto de la libreria
-    delete ngn; ngn = NULL;
+        // Actualiza los datos de la interficie
+        void Update(Robot* _robot);
 
-    // Devuelve el resultado de la ejecucion
-    return r;
+        // Render de los elementos de la interficie
+        void RenderBack();
+        void RenderFront();
 
-}
+
+    private:
+
+        NGN_SpriteData* cursor_sprite_data;             // Datos del sprite del cursor
+        NGN_Sprite* cursor_sprite;                      // Sprite del cursor
+
+        // Path
+        void DrawPath();                                // Metodo para "marcar" el camino mas optimo
+
+        // Overlay de los pesos
+        NGN_TextFont* monofonto_20;                     // Tipografia
+        NGN_TextLayer* dumbbels_text_layer;             // Capa de texto
+        void DumbbellsOverlay();                        // Sobreimprime el peso de cada tile
+
+        // Gui
+        NGN_TextFont* monofonto_24;                     // Tipografia
+        NGN_TextLayer* gui_text_layer;                  // Capa de texto
+
+        // Objetos vinculados
+        Maze* maze;
+        Robot* robot;
+
+
+};
+
+
+
+#endif // GUI_H_INCLUDED

@@ -1,6 +1,7 @@
 /******************************************************************************
 
-    Ejemplo de pathfinding recursivo: Archivo principal
+    N'gine Lib for C++
+    Configuracion (Declaraciones)
     Version 1.1.0-r
 
     Proyecto iniciado el 23 de Noviembre del 2020
@@ -60,55 +61,29 @@
 
 
 
+#ifndef SETTINGS_H_INCLUDED
+#define SETTINGS_H_INCLUDED
+
+
+
 /*** Includes ***/
-// C++
-#include <cstdio>
-#include <iostream>
+// Includes de C++
+#include <string>
 // Includes de la libreria
 #include <ngn.h>
-// Includes del programa
-#include "program.h"
 
 
 
-/*** Main ***/
-int main(int argc, char* args[]) {
+/*** Parametros de la ventana ***/
+static const std::string WINDOW_TITLE = "N'gine Recursive Pathfinding Example";     // Titulo de la ventana
+static const uint32_t SCR_WIDTH = 1280;                                             // Resolucion
+static const uint32_t SCR_HEIGHT = 720;
+static const int8_t SCR_MODE_WINDOWS = NGN_SCR_WINDOW;                              // Modo de pantalla en Windows
+static const int8_t SCR_MODE_LINUX = NGN_SCR_WINDOW;                                // Modo de pantalla en Linux
+static const bool SHOW_MOUSE = false;                                               // Estado del puntero del raton
+static const bool BILINEAR_FILTER = false;                                          // Filtrado bi-linear
+static const bool VSYNC = true;                                                     // Sincronismo vertical
+static const bool FPS_COUNTER = false;                                              // Contador de frames por segundo (solo en modo debug)
 
-    // Resultado
-    int r = 0x00;
 
-    // Crea el objeto de la libreria
-    ngn = NULL;
-    ngn = new NGN();
-
-    // Crea el objecto del programa
-    Program* program = NULL;
-    program = new Program();
-
-    // Intenta iniciar N'gine para ejecutar el programa
-    if (program->Awake()) {
-        // Intenta inicializar el programa
-        if (program->Start()) {
-            // Si se ha iniciado correctamente, ejecutalo.
-            program->Run();
-        } else {
-            // Error al inicializar el juego
-            std::cout << "Game Start-up failed!" << std::endl;
-            r = 0x02;
-        }
-    } else {
-        // Error al inicializar la libreria
-        std::cout << "N'GINE boot-up failed!" << std::endl;
-        r = 0x01;
-    }
-
-    // Elimina el objecto program
-    delete program; program = NULL;
-
-    // Elimina el objeto de la libreria
-    delete ngn; ngn = NULL;
-
-    // Devuelve el resultado de la ejecucion
-    return r;
-
-}
+#endif // SETTINGS_H_INCLUDED
