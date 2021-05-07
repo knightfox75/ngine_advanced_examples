@@ -12,6 +12,7 @@
 2. Que se incluye
    Ejemplos completos de:
    - Path finding (recursivo)
+   - Aventura conversacional
    
 3. A quién va destinado
    Estos ejemplos van destinados a los usuarios con conocimientos previos de
