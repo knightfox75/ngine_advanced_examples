@@ -1,11 +1,9 @@
 /******************************************************************************
 
-    N'gine Lib for C++
-    Configuracion (Declaraciones)
-    Version 1.1.0-r
+    Ejemplo de una aventura conversacional: Personajes actores
 
-    Proyecto iniciado el 23 de Noviembre del 2020
-    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    Proyecto iniciado el 1 de Febrero del 2016
+    (cc) 2016 - 2021 by Cesar Rincon "NightFox"
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
@@ -61,29 +59,72 @@
 
 
 
-#ifndef SETTINGS_H_INCLUDED
-#define SETTINGS_H_INCLUDED
-
-
-
 /*** Includes ***/
-// Includes de C++
-#include <string>
+// c++
+#include <cstdio>
+#include <iostream>
 // Includes de la libreria
 #include <ngn.h>
+// Includes del programa
+#include "cast.h"
 
 
 
-/*** Parametros de la ventana ***/
-static const std::string WINDOW_TITLE = "N'gine Recursive Pathfinding Example";     // Titulo de la ventana
-static const uint32_t SCR_WIDTH = 1280;                                             // Resolucion
-static const uint32_t SCR_HEIGHT = 720;
-static const int8_t SCR_MODE_WINDOWS = NGN_SCR_WINDOW;                              // Modo de pantalla en Windows
-static const int8_t SCR_MODE_LINUX = NGN_SCR_WINDOW;                                // Modo de pantalla en Linux
-static const bool SHOW_MOUSE = false;                                               // Estado del puntero del raton
-static const bool BILINEAR_FILTER = false;                                          // Filtrado bi-linear
-static const bool VSYNC = true;                                                     // Sincronismo vertical
-static const bool FPS_COUNTER = false;                                              // Contador de frames por segundo (solo en modo debug)
+/*** Constructor de la clase ***/
+Cast::Cast() {
+
+    // Imagenes
+    setsuna_img = NULL;
+    natsumi_img = NULL;
+
+    // Actores
+    actors.clear();
+
+}
 
 
-#endif // SETTINGS_H_INCLUDED
+
+/*** Destructor de la clase ***/
+Cast::~Cast() {
+
+    // Actores
+    for (uint32_t i = 0; i < actors.size(); i ++) {
+        delete actors[i];
+    }
+    actors.clear();
+
+    // Imagenes
+    delete setsuna_img; setsuna_img = NULL;
+    delete natsumi_img; natsumi_img = NULL;
+
+}
+
+
+
+/*** Carga de los archivos necesarios ***/
+bool Cast::Load() {
+
+    // Carga los retratos
+    setsuna_img = ngn->load->Sprite("data/sprites/portrait_setsuna.spr");
+    if (!setsuna_img) return false;
+    natsumi_img = ngn->load->Sprite("data/sprites/portrait_natsumi.spr");
+    if (!natsumi_img) return false;
+
+    // Archivos cargados con exito
+    return true;
+
+}
+
+
+
+/*** Crea a los actores ***/
+void Cast::Create() {
+
+    // Voz en off
+    actors.push_back(new Actor("#STORYTELLER#", NULL, "", 0x000000, 0, 0));
+    // Setsuna
+    actors.push_back(new Actor("#SETSUNA#", setsuna_img, "Setsuna", 0x0088FF, 32, -6));
+    // Natsumi
+    actors.push_back(new Actor("#NATSUMI#", natsumi_img, "Natsumi", 0xFF0088, 32, -6));
+
+}

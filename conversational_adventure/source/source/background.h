@@ -1,11 +1,9 @@
 /******************************************************************************
 
-    N'gine Lib for C++
-    Configuracion (Declaraciones)
-    Version 1.1.0-r
+    Ejemplo de una aventura conversacional: Decorados
 
-    Proyecto iniciado el 23 de Noviembre del 2020
-    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    Proyecto iniciado el 1 de Febrero del 2016
+    (cc) 2016 - 2021 by Cesar Rincon "NightFox"
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
@@ -61,29 +59,51 @@
 
 
 
-#ifndef SETTINGS_H_INCLUDED
-#define SETTINGS_H_INCLUDED
+#ifndef BACKGROUND_H_INCLUDED
+#define BACKGROUND_H_INCLUDED
 
 
 
 /*** Includes ***/
-// Includes de C++
-#include <string>
 // Includes de la libreria
 #include <ngn.h>
 
 
 
-/*** Parametros de la ventana ***/
-static const std::string WINDOW_TITLE = "N'gine Recursive Pathfinding Example";     // Titulo de la ventana
-static const uint32_t SCR_WIDTH = 1280;                                             // Resolucion
-static const uint32_t SCR_HEIGHT = 720;
-static const int8_t SCR_MODE_WINDOWS = NGN_SCR_WINDOW;                              // Modo de pantalla en Windows
-static const int8_t SCR_MODE_LINUX = NGN_SCR_WINDOW;                                // Modo de pantalla en Linux
-static const bool SHOW_MOUSE = false;                                               // Estado del puntero del raton
-static const bool BILINEAR_FILTER = false;                                          // Filtrado bi-linear
-static const bool VSYNC = true;                                                     // Sincronismo vertical
-static const bool FPS_COUNTER = false;                                              // Contador de frames por segundo (solo en modo debug)
+/*** Declaracion de la clase ***/
+class Background {
+
+    public:
+
+        // Constructor de la clase
+        Background();
+
+        // Destructor de la clase
+        ~Background();
+
+        // Carga los recursos de la clase
+        bool Load();
+
+        // Crea la caja de texto
+        void Create();
+
+        // Actualiza el contenido de la caja de texto
+        void Update();
+
+        // Render de la caja de texto
+        void Render();
 
 
-#endif // SETTINGS_H_INCLUDED
+    private:
+
+        // Imagen principal del fondo (en textura)
+        NGN_TextureData* main_img;
+        NGN_Texture* main_bg;
+
+
+
+};
+
+
+
+#endif // BACKGROUND_H_INCLUDED

@@ -1,11 +1,9 @@
 /******************************************************************************
 
-    N'gine Lib for C++
-    Configuracion (Declaraciones)
-    Version 1.1.0-r
+    Ejemplo de una aventura conversacional: Lector de archivos de guion
 
-    Proyecto iniciado el 23 de Noviembre del 2020
-    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    Proyecto iniciado el 1 de Febrero del 2016
+    (cc) 2016 - 2021 by Cesar Rincon "NightFox"
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
@@ -61,29 +59,76 @@
 
 
 
-#ifndef SETTINGS_H_INCLUDED
-#define SETTINGS_H_INCLUDED
-
-
-
 /*** Includes ***/
-// Includes de C++
+// c++
+#include <cstdio>
+#include <iostream>
 #include <string>
+#include <vector>
 // Includes de la libreria
 #include <ngn.h>
+// Includes del programa
+#include "script_reader.h"
 
 
 
-/*** Parametros de la ventana ***/
-static const std::string WINDOW_TITLE = "N'gine Recursive Pathfinding Example";     // Titulo de la ventana
-static const uint32_t SCR_WIDTH = 1280;                                             // Resolucion
-static const uint32_t SCR_HEIGHT = 720;
-static const int8_t SCR_MODE_WINDOWS = NGN_SCR_WINDOW;                              // Modo de pantalla en Windows
-static const int8_t SCR_MODE_LINUX = NGN_SCR_WINDOW;                                // Modo de pantalla en Linux
-static const bool SHOW_MOUSE = false;                                               // Estado del puntero del raton
-static const bool BILINEAR_FILTER = false;                                          // Filtrado bi-linear
-static const bool VSYNC = true;                                                     // Sincronismo vertical
-static const bool FPS_COUNTER = false;                                              // Contador de frames por segundo (solo en modo debug)
+/*** Constructor de la clase ***/
+ScriptReader::ScriptReader() {
+
+}
 
 
-#endif // SETTINGS_H_INCLUDED
+
+/*** Destructor de la clase ***/
+ScriptReader::~ScriptReader() {
+
+}
+
+
+
+/*** Lee un archivo de guion ***/
+bool ScriptReader::Read(std::string script_file, std::vector<std::string> &text_lines) {
+
+    // Prepara los datos
+    std::vector<uint8_t> buffer;
+    buffer.clear();
+    text_lines.clear();
+
+    // Intenta cargar el archivo
+    if (ngn->load->LoadFile(script_file, buffer) < 0) return false;
+
+    // Si no hay contenido, sal
+    if (buffer.size() == 0) {
+        buffer.clear();
+        return true;
+    }
+
+    // datos para el procesado
+    std::string line = "";
+
+    // Procesa el archivo
+    for (uint32_t i = 0; i < buffer.size(); i ++) {
+        // Si el caracter es final de linea
+        if (buffer[i] == '\n') {
+            // Almacena la linea actual
+            text_lines.push_back(line);
+            // Nueva linea
+            line = "";
+        } else if ((buffer[i] >= 0x20) && (buffer[i] != 0x7F) && (buffer[i] != 0xFF)) {
+            // Si el caracter esta dentro del rango, almacenalo
+            line += buffer[i];
+        }
+    }
+    // Verifica si hay datos pendientes (ultima linea sin \n)
+    if (line.size() > 0) text_lines.push_back(line);
+
+    // Debug: Test de contenido
+    //for (uint32_t i = 0; i < text_lines.size(); i ++) std::cout << text_lines[i] << std::endl;
+
+    // Elimina el buffer de datos
+    buffer.clear();
+
+    // Carga correcta
+    return true;
+
+}

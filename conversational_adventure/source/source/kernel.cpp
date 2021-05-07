@@ -1,11 +1,9 @@
 /******************************************************************************
 
-    N'gine Lib for C++
-    Ejemplo de pathfinding recursivo (Programa)
-    Version 1.1.0-r
+    N'gine Project Template: Nucleo de ejecucion del juego
 
-    Proyecto iniciado el 23 de Noviembre del 2020
-    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    Proyecto iniciado el 1 de Febrero del 2016
+    (cc) 2016 - 2021 by Cesar Rincon "NightFox"
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
@@ -65,47 +63,40 @@
 // c++
 #include <cstdio>
 #include <iostream>
-#include <cmath>
-// Includes de la libreria
+// Includes de la libreria NGN
 #include <ngn.h>
-// Includes del programa
-#include "program.h"
-#include "recursive_pathfinding.h"
-#include "maze.h"
-#include "robot.h"
-#include "gui.h"
+// Includes del proyecto
+#include "kernel.h"
+#include "settings.h"
 
 
 
 /*** Constructor de la clase ***/
-Program::Program() {
+Kernel::Kernel() {
 
-    maze = Maze::GetInstance();                             // Singleton del laberinto
+    // Objetos de codigo
+    background = new Background();
+    narrator = new Narrator();
 
-    robot = new Robot();                                    // Objeto del Robot
-    pathfinding = new RecursivePathfinding();               // Pathfinding recursivo
-    gui = new Gui();                                        // Objeto de la interfaz
 
 }
 
 
 
 /*** Destructor de la clase ***/
-Program::~Program() {
+Kernel::~Kernel() {
 
-    delete gui; gui = NULL;
-    delete pathfinding; pathfinding = NULL;
-    delete robot; robot = NULL;
+    // Objetos de codigo
+    delete narrator; narrator = NULL;
+    delete background; background = NULL;
 
-    Maze::RemoveInstance();
-    maze = NULL;
 
 }
 
 
 
 /*** Inicializa N'GINE ***/
-bool Program::Awake() {
+bool Kernel::Awake() {
 
     // Inicializa la libreria
     if (!ngn->Init()) {
@@ -120,7 +111,7 @@ bool Program::Awake() {
     if (!ngn->graphics->Init(WINDOW_TITLE, SCR_WIDTH, SCR_HEIGHT, NGN_SCR_WINDOW, BILINEAR_FILTER, VSYNC)) return false;
     ngn->graphics->Update();
 
-    // visibilidad del cursor del raton
+    // Visibilidad del cursor del raton
     ngn->graphics->ShowMouse(SHOW_MOUSE);
 
     // Contador de FPS activo?
@@ -152,7 +143,7 @@ bool Program::Awake() {
 
 
 /*** Al iniciar el programa ***/
-bool Program::Start() {
+bool Kernel::Start() {
 
     // Carga de archivos
     if (!Load()) return false;
@@ -167,55 +158,47 @@ bool Program::Start() {
 
 
 
-/*** Ejecucion del programa ***/
-int8_t Program::Run() {
+/*** Ejecuta el juego ***/
+void Kernel::Run() {
 
     // Control del loop
-    int8_t loop = -1;
+    uint8_t loop = FLAG_ZERO;
 
-    while (loop < 0) {
+    while (loop == FLAG_ZERO) {
 
         // Gestor de eventos de SDL y N'gine
-        ngn->system->EventUpdate();            // Actualiza los eventos
+        ngn->system->EventUpdate();
 
-
-        /***
-        Bucle principal del programa
-        ***/
-        Logic();        // Logica del programa
-        Render();       // Render de los elementos graficos
-
+        // Logica del programa
+        loop |= Update();
+        // Render de los elementos graficos
+        Render();
 
         // Actualiza el contenido de la pantalla
         ngn->graphics->Update();
         // Actualiza el sonido
         ngn->sound->Update();
 
-        // Control del bucle principal
-        if (ngn->system->quit) {    // Si se pulsa la [X] de la ventana
-            loop = 0;
-        } else if (ngn->input->key_ESC->down || ngn->input->controller[0].button[10].down) {    // Si se pulsa la tecla [ESC] O se pulsa el boton XBOX
-            loop = 1;
-        }
+        // Salida del programa
+        if (
+            ngn->system->quit                                           // Si se pulsa la [X] de la ventana o ALT+F4
+            ||
+            ngn->input->key_ESC->down                                   // la tecla ESC
+            ||
+            ngn->input->controller[0].button[XBOX_BUTTON_XBOX].down     // o el boton [X] del gamepad de XBOX
+        ) loop |= FLAG_EXIT;
 
     }
-
-    // Devuelve el resultado
-    return loop;
 
 }
 
 
-
 /*** Carga de los archivos necesarios ***/
-bool Program::Load() {
+bool Kernel::Load() {
 
-    // Laberinto
-    if (!maze->Load()) return false;
-    // Robot
-    if (!robot->Load()) return false;
-    // GUI
-    if (!gui->Load()) return false;
+    // Recursos de los objetos de codigo
+    if (!background->Load()) return false;              // Decorado de fondo
+    if (!narrator->Load()) return false;                // Narrador
 
     // Archivos cargados con exito
     return true;
@@ -225,59 +208,36 @@ bool Program::Load() {
 
 
 /*** Crea los elementos del programa ***/
-void Program::Create() {
+void Kernel::Create() {
 
-    // Crea el laberinto
-    maze->Create();
-    // Crea el Robot
-    robot->Create();
-    // Crea la interfaz
-    gui->Create();
+    // Crea los elementos de la escena
+    background->Create();               // Decorado de fondo
+    narrator->Create();                 // Narrador
 
 }
 
 
 
 /*** Logica del programa ***/
-void Program::Logic() {
+uint8_t Kernel::Update() {
 
-    Vector2I32 p = MouseOver();         // Lee el nº de tile segun la posicion del raton
+    uint8_t r = FLAG_ZERO;
 
-    pathfinding->GetPath(robot, p);     // Calcula el path para este robot
-    robot->Update();
+    // Elementos de la escena
+    background->Update();                           // Decorado de fondo
+    if (narrator->Update() > 0) r |= FLAG_EXIT;     // Narrador
 
-    gui->Update(robot);                 // Muestra la informacion de este robot
+    return r;
 
 }
 
 
 
 /*** Render de los elementos graficos ***/
-void Program::Render() {
+void Kernel::Render() {
 
-    // Laberinto
-    maze->Render();
-    // Red de pesos
-    gui->RenderBack();
-    // Robot
-    robot->Render();
-    // Cursor y textos de ayuda
-    gui->RenderFront();
-
-
-}
-
-
-
-/*** Seleccion con el cursor ***/
-Vector2I32 Program::MouseOver() {
-
-    // Calcula el tile segun la posicion del puntero del raton
-    Vector2I32 tile = {0, 0};
-    tile.x = ((ngn->input->mouse.x - maze->position_x) / (int32_t)maze->token_width);
-    tile.y = ((ngn->input->mouse.y - maze->position_y) / (int32_t)maze->token_height);
-
-    // Devuelve el resultado
-    return tile;
+    // Elementos de la escena
+    background->Render();               // Decorado de fondo
+    narrator->Render();                 // Narrador
 
 }

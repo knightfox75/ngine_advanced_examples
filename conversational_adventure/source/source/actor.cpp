@@ -1,11 +1,9 @@
 /******************************************************************************
 
-    N'gine Lib for C++
-    Configuracion (Declaraciones)
-    Version 1.1.0-r
+    Ejemplo de una aventura conversacional: Actor de reparto
 
-    Proyecto iniciado el 23 de Noviembre del 2020
-    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    Proyecto iniciado el 1 de Febrero del 2016
+    (cc) 2016 - 2021 by Cesar Rincon "NightFox"
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
@@ -61,29 +59,52 @@
 
 
 
-#ifndef SETTINGS_H_INCLUDED
-#define SETTINGS_H_INCLUDED
-
-
-
 /*** Includes ***/
-// Includes de C++
-#include <string>
+// c++
+#include <cstdio>
+#include <iostream>
 // Includes de la libreria
 #include <ngn.h>
+// Includes del programa
+#include "actor.h"
 
 
 
-/*** Parametros de la ventana ***/
-static const std::string WINDOW_TITLE = "N'gine Recursive Pathfinding Example";     // Titulo de la ventana
-static const uint32_t SCR_WIDTH = 1280;                                             // Resolucion
-static const uint32_t SCR_HEIGHT = 720;
-static const int8_t SCR_MODE_WINDOWS = NGN_SCR_WINDOW;                              // Modo de pantalla en Windows
-static const int8_t SCR_MODE_LINUX = NGN_SCR_WINDOW;                                // Modo de pantalla en Linux
-static const bool SHOW_MOUSE = false;                                               // Estado del puntero del raton
-static const bool BILINEAR_FILTER = false;                                          // Filtrado bi-linear
-static const bool VSYNC = true;                                                     // Sincronismo vertical
-static const bool FPS_COUNTER = false;                                              // Contador de frames por segundo (solo en modo debug)
+/*** Constructor de la clase ***/
+Actor::Actor(
+    std::string tag_id,                 // Etiqueta en el archivo de guion
+    NGN_SpriteData* portrait,           // Imagen para el retrato
+    std::string character_name,         // Nombre del actor
+    uint32_t name_color,                // Color a usar en el nombre
+    int32_t off_x,                      // Offset del retrato respecto la caja (X)
+    int32_t off_y                       // Offset del retrato respecto la caja (Y)
+) {
+
+    // Guarda el TAG
+    tag = tag_id;
+    // Crea el sprite
+    if (portrait) {
+        sprite = new NGN_Sprite(portrait);
+    } else {
+        sprite = NULL;
+    }
+    // Guarda el nombre
+    name = character_name;
+    // el color de la etiqueta
+    color = name_color;
+    // y el offset
+    offset.x = off_x;
+    offset.y = off_y;
+
+}
 
 
-#endif // SETTINGS_H_INCLUDED
+
+/*** Destructor de la clase ***/
+Actor::~Actor() {
+
+    // Destruye el sprite
+    delete sprite;
+    sprite = NULL;
+
+}

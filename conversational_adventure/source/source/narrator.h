@@ -1,11 +1,9 @@
 /******************************************************************************
 
-    N'gine Lib for C++
-    Gui (Declaraciones)
-    Version 1.1.0-r
+    Ejemplo de una aventura conversacional: Narrador de la historia
 
-    Proyecto iniciado el 23 de Noviembre del 2020
-    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    Proyecto iniciado el 1 de Febrero del 2016
+    (cc) 2016 - 2021 by Cesar Rincon "NightFox"
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
@@ -61,69 +59,81 @@
 
 
 
-#ifndef GUI_H_INCLUDED
-#define GUI_H_INCLUDED
+#ifndef NARRATOR_H_INCLUDED
+#define NARRATOR_H_INCLUDED
 
 
 
 /*** Includes ***/
+// Includes de C++
+#include <vector>
+#include <string>
 // Includes de la libreria
 #include <ngn.h>
-// Includes del programa
-#include "maze.h"
-#include "robot.h"
+// Includes del proyecto
+#include "textbox.h"
+#include "cast.h"
+#include "script_reader.h"
 
 
 
 /*** Declaracion de la clase ***/
-class Gui {
+class Narrator {
 
     public:
 
-        // Constructor
-        Gui();
+        // Constructor de la clase
+        Narrator();
 
-        // Destructor
-        ~Gui();
+        // Destructor de la clase
+        ~Narrator();
 
-        // Carga los recursos
+        // Carga los recursos de la clase
         bool Load();
 
-        // Crea la interficie
+        // Crea la caja de texto
         void Create();
 
-        // Actualiza los datos de la interficie
-        void Update(Robot* _robot);
+        // Actualiza el contenido de la caja de texto
+        uint8_t Update();
 
-        // Render de los elementos de la interficie
-        void RenderBack();
-        void RenderFront();
+        // Render de la caja de texto
+        void Render();
 
 
     private:
 
-        NGN_SpriteData* cursor_sprite_data;             // Datos del sprite del cursor
-        NGN_Sprite* cursor_sprite;                      // Sprite del cursor
+        // Configuracion
+        const uint8_t TEXT_SPEED = 2;       // Velocidad del texto
 
-        // Path
-        void DrawPath();                                // Metodo para "marcar" el camino mas optimo
+        // Objetos de codigo
+        TextBox* textbox;           // Caja de texto
+        Cast* cast;                 // Gestor de actores del reparto
+        ScriptReader* sr;           // Lector de scripts
 
-        // Overlay de los pesos
-        NGN_TextFont* monofonto_20;                     // Tipografia
-        NGN_TextLayer* dumbbels_text_layer;             // Capa de texto
-        void DumbbellsOverlay();                        // Sobreimprime el peso de cada tile
+        // Control de la narracion (maquina de estados)
+        uint8_t st, next_st;
+        static const uint8_t st_idle = 0;
+        static const uint8_t st_get_script = 1;
+        static const uint8_t st_parse_line = 2;
+        static const uint8_t st_play_line = 3;
+        static const uint8_t st_exit = 255;
 
-        // Gui
-        NGN_TextFont* monofonto_24;                     // Tipografia
-        NGN_TextLayer* gui_text_layer;                  // Capa de texto
+        void PlayScript();
+        void StIdle();
+        void StGetScript();
+        void StParseLine();
+        void StPlayLine();
 
-        // Objetos vinculados
-        Maze* maze;
-        Robot* robot;
+        bool show_textbox;                      // Muestra la caja de texto?
+        uint32_t script_line;                   // Linea actual del guion
+        std::vector<std::string> script;        // Guarda las lineas del archivo de guion
+        Actor* actor;                           // Actor actual
+        bool eof;                               // Flag de fin del archivo
 
 
 };
 
 
 
-#endif // GUI_H_INCLUDED
+#endif // NARRATOR_H_INCLUDED

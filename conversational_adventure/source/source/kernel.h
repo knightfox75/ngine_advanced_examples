@@ -1,11 +1,9 @@
 /******************************************************************************
 
-    N'gine Lib for C++
-    Configuracion (Declaraciones)
-    Version 1.1.0-r
+    Ejemplo de una aventura conversacional: Nucleo del codigo
 
-    Proyecto iniciado el 23 de Noviembre del 2020
-    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    Proyecto iniciado el 1 de Febrero del 2016
+    (cc) 2016 - 2021 by Cesar Rincon "NightFox"
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
@@ -61,29 +59,59 @@
 
 
 
-#ifndef SETTINGS_H_INCLUDED
-#define SETTINGS_H_INCLUDED
+#ifndef KERNEL_H_INCLUDED
+#define KERNEL_H_INCLUDED
+
+
+// Includes del proyecto
+#include "settings.h"
+#include "background.h"
+#include "narrator.h"
 
 
 
-/*** Includes ***/
-// Includes de C++
-#include <string>
-// Includes de la libreria
-#include <ngn.h>
+
+/*** Declaracion de la clase ***/
+class Kernel {
+
+    public:
+
+        // Constructor
+        Kernel();
+
+        // Destructor
+        ~Kernel();
+
+        // Awake
+        bool Awake();
+
+        // Start
+        bool Start();
+
+        // Ejecucion del juego
+        void Run();
+
+
+    private:
+
+        // Carga los recursos de la clase
+        bool Load();
+
+        // Crea la caja de texto
+        void Create();
+
+        // Actualiza el contenido de la caja de texto
+        uint8_t Update();
+
+        // Render de la caja de texto
+        void Render();
+
+        // Objetos de codigo
+        Background* background;     // Fondos del decorado
+        Narrator* narrator;         // Narrador
+
+};
 
 
 
-/*** Parametros de la ventana ***/
-static const std::string WINDOW_TITLE = "N'gine Recursive Pathfinding Example";     // Titulo de la ventana
-static const uint32_t SCR_WIDTH = 1280;                                             // Resolucion
-static const uint32_t SCR_HEIGHT = 720;
-static const int8_t SCR_MODE_WINDOWS = NGN_SCR_WINDOW;                              // Modo de pantalla en Windows
-static const int8_t SCR_MODE_LINUX = NGN_SCR_WINDOW;                                // Modo de pantalla en Linux
-static const bool SHOW_MOUSE = false;                                               // Estado del puntero del raton
-static const bool BILINEAR_FILTER = false;                                          // Filtrado bi-linear
-static const bool VSYNC = true;                                                     // Sincronismo vertical
-static const bool FPS_COUNTER = false;                                              // Contador de frames por segundo (solo en modo debug)
-
-
-#endif // SETTINGS_H_INCLUDED
+#endif // KERNEL_H_INCLUDED

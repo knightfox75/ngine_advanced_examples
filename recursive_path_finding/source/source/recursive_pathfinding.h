@@ -9,7 +9,7 @@
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
-    Requiere N'gine 1.3.0-beta o superior
+    Requiere N'gine 1.5.0-beta o superior
 
     Requiere GCC 8.1.0 MinGW (SEH) - 64-bits
     http://downloads.sourceforge.net/project/mingw-w64/
@@ -95,7 +95,7 @@ class RecursivePathfinding {
 
         int32_t Find(int8_t sx, int8_t sy, int8_t ex, int8_t ey);  			// Metodo para ejecutar el pathfinding
         void Dumbbells(int8_t py, int8_t px, int32_t cnt);              	// Metodo para el calculo de los pesos
-        int32_t ShortestPath(int8_t py, int8_t px, int32_t cnt);            // Metodo para la resolucion de caminos validos
+        int32_t ShortestPath(int8_t py, int8_t px, int32_t cnt);            // Metodo para encontrar el camino mas corto
         void Clear();                                               		// Metodo para resetear el contenidos de TODOS los arrays
         int32_t path_min_length;                                            // Guarda el peso maximo del camino mas corto
 

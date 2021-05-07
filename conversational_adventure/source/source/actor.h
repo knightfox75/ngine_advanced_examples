@@ -1,11 +1,9 @@
 /******************************************************************************
 
-    N'gine Lib for C++
-    Configuracion (Declaraciones)
-    Version 1.1.0-r
+    Ejemplo de una aventura conversacional: Actor de reparto
 
-    Proyecto iniciado el 23 de Noviembre del 2020
-    (cc) 2020 - 2021 by Cesar Rincon "NightFox"
+    Proyecto iniciado el 1 de Febrero del 2016
+    (cc) 2016 - 2021 by Cesar Rincon "NightFox"
     https://nightfoxandco.com
     contact@nightfoxandco.com
 
@@ -61,29 +59,56 @@
 
 
 
-#ifndef SETTINGS_H_INCLUDED
-#define SETTINGS_H_INCLUDED
+#ifndef ACTOR_H_INCLUDED
+#define ACTOR_H_INCLUDED
 
 
 
 /*** Includes ***/
-// Includes de C++
+// C++
 #include <string>
 // Includes de la libreria
 #include <ngn.h>
 
 
 
-/*** Parametros de la ventana ***/
-static const std::string WINDOW_TITLE = "N'gine Recursive Pathfinding Example";     // Titulo de la ventana
-static const uint32_t SCR_WIDTH = 1280;                                             // Resolucion
-static const uint32_t SCR_HEIGHT = 720;
-static const int8_t SCR_MODE_WINDOWS = NGN_SCR_WINDOW;                              // Modo de pantalla en Windows
-static const int8_t SCR_MODE_LINUX = NGN_SCR_WINDOW;                                // Modo de pantalla en Linux
-static const bool SHOW_MOUSE = false;                                               // Estado del puntero del raton
-static const bool BILINEAR_FILTER = false;                                          // Filtrado bi-linear
-static const bool VSYNC = true;                                                     // Sincronismo vertical
-static const bool FPS_COUNTER = false;                                              // Contador de frames por segundo (solo en modo debug)
+/*** Declaracion de la clase ***/
+class Actor {
+
+    public:
+
+        // Constructor de la clase
+        Actor(
+            std::string tag_id,                 // Etiqueta en el archivo de guion
+            NGN_SpriteData* portrait,           // Imagen para el retrato
+            std::string character_name,         // Nombre del actor
+            uint32_t name_color,                // Color a usar en el nombre
+            int32_t off_x,                      // Offset del retrato respecto la caja (X)
+            int32_t off_y                       // Offset del retrato respecto la caja (Y)
+        );
+
+        // Destructor de la clase
+        ~Actor();
+
+        // Etiqueta a usar en el guion
+        std::string tag;
+		// Sprite del actor
+		NGN_Sprite* sprite;
+		// Nombre del actor
+        std::string name;
+        // Color del actor (etiqueta del nombre)
+        uint32_t color;
+        // Offset de colocacion en la caja de texto (top/left del sprite respecto al top/left de la caja)
+        Vector2I32 offset;
 
 
-#endif // SETTINGS_H_INCLUDED
+    private:
+
+
+
+
+};
+
+
+
+#endif // ACTOR_H_INCLUDED
